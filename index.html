@@ -30,11 +30,16 @@
             </div>
 
             <div id="game-screen" style="display: none;">
-                <button id="home-btn" class="icon-btn">🏠</button>
+                <button id="home-btn">
+                    <span class="home-icon">←</span>
+                    <span class="home-text">ACCUEIL</span>
+                </button>
                 
                 <div id="progress-info">
                     <p>Mot <span id="current-word-number">1</span>/4</p>
                 </div>
+
+                <div id="attempts-info"></div>
 
                 <div id="grid-container"></div>
                 
@@ -54,4 +59,3 @@
     <script src="script.js"></script>
 </body>
 </html>
-

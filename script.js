@@ -58,6 +58,17 @@ function loadWord() {
     
     createGrid();
     createKeyboard();
+    updateAttemptsInfo();
+}
+
+function updateAttemptsInfo() {
+    let attemptsInfo = document.getElementById('attempts-info');
+    if (!attemptsInfo) {
+        attemptsInfo = document.createElement('div');
+        attemptsInfo.id = 'attempts-info';
+        document.getElementById('progress-info').after(attemptsInfo);
+    }
+    attemptsInfo.innerHTML = `<p>Tentative ${currentAttempt + 1}/${MAX_ATTEMPTS}</p>`;
 }
 
 function createGrid() {
@@ -67,27 +78,26 @@ function createGrid() {
     const currentWord = WORDS[currentWordIndex];
     const wordLength = currentWord.length;
     
-    for (let i = 0; i < MAX_ATTEMPTS; i++) {
-        const row = document.createElement('div');
-        row.className = 'grid-row';
-        row.id = `row-${i}`;
+    // Créer UNE SEULE ligne pour la tentative actuelle
+    const row = document.createElement('div');
+    row.className = 'grid-row';
+    row.id = 'current-row';
+    
+    for (let j = 0; j < wordLength; j++) {
+        const cell = document.createElement('div');
+        cell.className = 'grid-cell';
+        cell.id = `cell-${j}`;
         
-        for (let j = 0; j < wordLength; j++) {
-            const cell = document.createElement('div');
-            cell.className = 'grid-cell';
-            cell.id = `cell-${i}-${j}`;
-            
-            // Afficher la première lettre
-            if (j === 0 && i === 0) {
-                cell.textContent = currentWord[0];
-                cell.classList.add('first-letter');
-            }
-            
-            row.appendChild(cell);
+        // Afficher la première lettre
+        if (j === 0) {
+            cell.textContent = currentWord[0];
+            cell.classList.add('first-letter');
         }
         
-        gridContainer.appendChild(row);
+        row.appendChild(cell);
     }
+    
+    gridContainer.appendChild(row);
 }
 
 function createKeyboard() {
@@ -169,7 +179,7 @@ function updateCurrentRow() {
     const wordLength = currentWord.length;
     
     for (let i = 0; i < wordLength; i++) {
-        const cell = document.getElementById(`cell-${currentAttempt}-${i}`);
+        const cell = document.getElementById(`cell-${i}`);
         if (i < currentGuess.length) {
             cell.textContent = currentGuess[i];
             cell.classList.add('filled');
@@ -217,10 +227,11 @@ function submitGuess() {
     
     // Appliquer les couleurs aux cellules
     for (let i = 0; i < currentGuess.length; i++) {
-        const cell = document.getElementById(`cell-${currentAttempt}-${i}`);
+        const cell = document.getElementById(`cell-${i}`);
         setTimeout(() => {
+            cell.className = 'grid-cell'; // Reset classes
             cell.classList.add(result[i]);
-        }, i * 100);
+        }, i * 150);
         
         // Mettre à jour l'état du clavier
         const normalizedChar = normalizeChar(currentGuess[i]);
@@ -234,37 +245,39 @@ function submitGuess() {
     // Vérifier si le mot est trouvé
     if (normalizedGuess === normalizedWord) {
         setTimeout(() => {
-            showMessage('Bien joué ! 🎉', 'success');
+            showMessage('Parfait ! 🎉✨', 'success');
             gameActive = false;
             setTimeout(() => {
                 currentWordIndex++;
                 loadWord();
             }, 2000);
-        }, currentGuess.length * 100);
+        }, currentGuess.length * 150);
     } else {
         currentAttempt++;
         if (currentAttempt >= MAX_ATTEMPTS) {
             gameActive = false;
             setTimeout(() => {
-                showMessage(`Perdu ! Le mot était : ${currentWord}`, 'error');
+                showMessage(`Dommage ! C'était : ${currentWord} 😔`, 'error');
                 setTimeout(() => {
                     currentWordIndex++;
                     loadWord();
                 }, 3000);
-            }, currentGuess.length * 100);
+            }, currentGuess.length * 150);
         } else {
-            currentGuess = '';
+            // Réinitialiser pour la prochaine tentative
             setTimeout(() => {
-                // Ajouter la première lettre automatiquement
-                currentGuess = currentWord[0];
+                currentGuess = '';
+                updateAttemptsInfo();
+                createGrid(); // Recréer la grille vide
+                currentGuess = currentWord[0]; // Ajouter la première lettre
                 updateCurrentRow();
-            }, currentGuess.length * 100);
+            }, currentGuess.length * 150 + 500);
         }
     }
     
     setTimeout(() => {
         createKeyboard(); // Mettre à jour le clavier avec les nouvelles couleurs
-    }, currentGuess.length * 100);
+    }, currentGuess.length * 150);
 }
 
 function showMessage(text, type) {
@@ -273,8 +286,10 @@ function showMessage(text, type) {
     message.className = `message ${type}`;
     
     setTimeout(() => {
-        message.textContent = '';
-        message.className = 'message';
+        if (message.textContent === text) { // Ne clear que si c'est toujours le même message
+            message.textContent = '';
+            message.className = 'message';
+        }
     }, 3000);
 }
 
@@ -298,4 +313,3 @@ function restartGame() {
 
 // Démarrer l'application
 init();
-
