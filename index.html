@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORNELUSH - Jeu de Mots</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span class="logo-part logo-o">O</span>
+                <span class="logo-part logo-r">R</span>
+                <span class="logo-part logo-n">N</span>
+                <span class="logo-circle">E</span>
+                <span class="logo-part logo-l">L</span>
+                <span class="logo-part logo-u">U</span>
+                <span class="logo-part logo-s">S</span>
+                <span class="logo-part logo-h">H</span>
+            </div>
+        </header>
+
+        <main id="game-container">
+            <div id="start-screen">
+                <div class="menu-button" id="btn-word-of-day">
+                    <div class="checkbox"></div>
+                    <div class="button-text">MOT DU JOUR</div>
+                </div>
+            </div>
+
+            <div id="game-screen" style="display: none;">
+                <button id="home-btn" class="icon-btn">🏠</button>
+                
+                <div id="progress-info">
+                    <p>Mot <span id="current-word-number">1</span>/4</p>
+                </div>
+
+                <div id="grid-container"></div>
+                
+                <div id="keyboard"></div>
+
+                <div id="message" class="message"></div>
+            </div>
+
+            <div id="victory-screen" style="display: none;">
+                <h1>🎉 Félicitations ! 🎉</h1>
+                <p>Vous avez trouvé tous les mots !</p>
+                <button id="restart-btn" class="restart-button">Recommencer</button>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
